@@ -372,18 +372,18 @@ if {$error==0} {
 			cd soc_prototype/src
 			file delete -force _locked
 			 
-			#set status [ catch { exec matlab.exe -nojvc -nosplash -nodesktop -r test_HIL($project_name_to_Matlab)} output ]
-
-			#added by Bulat
 			set OS [lindex $::tcl_platform(os) 0]
 			if { $OS == "Linux" } {
-    			set status [ catch { exec matlab -nojvm -nosplash -nodesktop -r test_HIL($project_name_to_Matlab) >@stdout} output ]
-			} else {
-    			set status [ catch { exec matlab.exe -nojvc -nosplash -nodesktop -r test_HIL($project_name_to_Matlab)} output ]
-			}
-			#added by Bulat
-			
+				# Save and then remove the LD_LIBRARY_PATH environment variable to prevent MATLAB having problems with libraries
+				set TEMP_LD_LIBRARY_PATH $::env(LD_LIBRARY_PATH)
+				set ::env(LD_LIBRARY_PATH) ""
 
+				# Call MATLAB
+				set status [ catch { exec matlab -nojvm -nosplash -nodesktop -r test_HIL($project_name_to_Matlab) >@stdout} output ]
+			} else {
+				set status [ catch { exec matlab.exe -nojvc -nosplash -nodesktop -r test_HIL($project_name_to_Matlab)} output ]
+			}
+			
 			# Wait until the Matlab has finished
 			while {true} {
 				if { [file exists _locked] == 1} {  
@@ -392,6 +392,9 @@ if {$error==0} {
 				}
 			}
 			
+			# Restore the LD_LIBRARY_PATH environment variable so Xilinx works
+			set ::env(LD_LIBRARY_PATH) $TEMP_LD_LIBRARY_PATH
+
 			cd ../../
 	
 
