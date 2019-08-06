@@ -6236,6 +6236,7 @@ puts $file "file copy -force ../../../src/echo.c workspace1/test_fpga/src"
 puts $file "file copy -force ../../../src/main.c workspace1/test_fpga/src"
 puts $file "file copy -force ../../../src/FPGAserver.h workspace1/test_fpga/src"
 puts $file ""
+puts $file "sdk configapp -app test_fpga build-config release"
 puts $file "sdk build_project -type all"
 
 
@@ -9668,6 +9669,7 @@ puts $file "#	file copy -force ../../../src/.project workspace1/test_fpga/.proje
 puts $file "#}"
 puts $file "#end added by Bulat"
 puts $file ""
+puts $file "sdk configapp -app test_fpga build-config release"
 puts $file "sdk build_project -type all"
 
 
